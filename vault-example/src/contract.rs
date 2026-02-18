@@ -18,7 +18,7 @@ impl VaultContract {
         if read_token(&env).is_some() {
             return Err(VaultError::AlreadyInitialized);
         }
-
+        
         write_token(&env, &token);
         Ok(())
     }
@@ -26,9 +26,9 @@ impl VaultContract {
     // Aumenta el balance de un usuario validando monto y autorización.
     pub fn deposit(env: Env, user: Address, amount: i128) -> Result<(), VaultError> {
         require_valid_amount(amount)?;
-        user.require_auth();
-
         let token = require_token_configured(read_token(&env))?;
+        
+        user.require_auth();
 
         let current_balance = read_balance(&env, &user);
         let updated_balance = checked_add_balance(current_balance, amount)?;
